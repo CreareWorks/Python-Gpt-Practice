@@ -10,8 +10,7 @@ class gptClient:
     def getWhisperData(self, audio_file_path):
         with open(audio_file_path, "rb") as audio_file:
             result = openai.Audio.transcribe("whisper-1", audio_file)
-            # RESPONSEはきてるのに、returnできねぇ
-        return result
+            return result.text
     
     # chatGptに文字起こし内容と定義済みプロンプトを元に議事録生成依頼
     def generateChatCompletion(

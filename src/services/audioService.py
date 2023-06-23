@@ -42,8 +42,8 @@ class audioService:
             for chunk_file in chunk_files:
                 async with aiofiles.open(chunk_file, "rb") as audio_data:
                     response = await client.post(url, headers=headers, content=str(Path(audio_data.name)))
-        
-        print(response)
+                    # ここでprintすると400
+        print(response.json()) #これで受け取る
 
         #whisperAPIに渡す値
         # <_io.BufferedReader name='/Users/oshimayota/Documents/project_source/transcription-proto/src/services/output000.wav'>
