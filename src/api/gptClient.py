@@ -16,14 +16,13 @@ class gptClient:
     def generateChatCompletion(
             self,
             system_template:str,
-            transcript:Dict[str, str]
-        ) -> str:
-        return openai.ChatCompletion.create(
-            model="gpt-3.5",
+            transcript:str
+        ):
+        completion = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
             messages=[
                 {"role": "system", "content": system_template},
-                {"role": "user", "content": transcript.text}
-            ],
-            # 出力する単語のランダム性（0から2の範囲 小数点含む) 0=返答内容固定
-            temperature=0
+                {"role": "user", "content": transcript.decode('utf-8')}
+            ]
         )
+        return completion

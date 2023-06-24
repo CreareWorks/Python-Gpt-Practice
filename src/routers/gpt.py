@@ -19,10 +19,11 @@ async def merge_chunk_file_text(request: Request):
     return gpt_service.transcribe_speech(audio_data)
 
 @router.post("/gpt/transacription")
-async def create_transacription(transcript) -> Dict[str, Any]:
+async def create_transacription(request: Request):
     try:
+        transacript = await request.body()
         #文字起こし結果と定義済みのプロンプトから議事録を生成
-        result = gpt_service.generate_minutes(transcript)
+        result = gpt_service.generate_minutes(transacript)
         
         return {
             "status_code": BASE_API_RESPONSE['REQUEST_SUCCESS'],

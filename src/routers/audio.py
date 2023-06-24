@@ -13,12 +13,12 @@ router = APIRouter()
 async def transacription_audio(file: UploadFile = File(...)):
     try:
         # 音声ファイルへの変換および文字起こし文字列を返却
-        await audio_service.transacription_audio(file)
+        result = await audio_service.transacription_audio(file)
+        
+        return result.json()
 
     except Exception as e:
         raise HTTPException(
             status_code=BASE_API_RESPONSE['BAD_REQUEST'],
             detail=str(e)
         )
-        
-        

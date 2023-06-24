@@ -12,7 +12,7 @@ class gptService:
         return self.gpt_client.getWhisperData(audio)
     
     # プロンプトをchatGPTにRequest
-    def generate_minutes(self, transcript: str) -> str:
+    def generate_minutes(self, transcript):
         system_template = """会議の文字起こし文字列を渡します。
 
         この会議のサマリーをMarkdown形式で作成してください。サマリーは、下記形式で書いてください。
@@ -22,5 +22,5 @@ class gptService:
         - 会議の結論"""
 
         completion = self.gpt_client.generateChatCompletion(system_template, transcript)
-        
+
         return completion.choices[GPT_FIRST_COMPLETE].message.content
