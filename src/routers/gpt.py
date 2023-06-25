@@ -1,7 +1,6 @@
 import os, io
 from fastapi import APIRouter, HTTPException, Request
 from services.gptService import gptService
-from typing import Dict, Any, BinaryIO
 from config.config import BASE_API_RESPONSE
 from dotenv import load_dotenv
 load_dotenv()
@@ -15,27 +14,28 @@ router = APIRouter()
 @router.post("/gpt/merge")
 async def merge_chunk_file_text(request: Request):
     audio_data = await request.body()
-    # 文字起こしと議事録生成
+    # 文字起こし
     return gpt_service.transcribe_speech(audio_data)
 
-# 一旦使わない
-@router.post("/gpt/transacription")
-async def create_transacription(request: Request):
-    try:
-        transacript = await request.body()
-        #文字起こし結果と定義済みのプロンプトから議事録を生成
-        result = gpt_service.generate_minutes(transacript)
-        
-        return {
-            "status_code": BASE_API_RESPONSE['REQUEST_SUCCESS'],
-            "result": result
-        }
-        
-    except Exception as e:
-        raise HTTPException(
-            status_code=BASE_API_RESPONSE['BAD_REQUEST'],
-            detail=str(e)
-        )
+
+# 一旦使わない プロンプト生成
+#@router.post("/gpt/transacription")
+#async def create_transacription(request: Request):
+#    try:
+#        transacript = await request.body()
+#        #文字起こし結果と定義済みのプロンプトから議事録を生成
+#        result = gpt_service.generate_minutes(transacript)
+#        
+#        return {
+#            "status_code": BASE_API_RESPONSE['REQUEST_SUCCESS'],
+#            "result": result
+#        }
+#        
+#    except Exception as e:
+#        raise HTTPException(
+#            status_code=BASE_API_RESPONSE['BAD_REQUEST'],
+#            detail=str(e)
+#        )
         
     # 呼び出しサンプル
     # 統合した文字列をプロンプト共にchatGPTにRequest

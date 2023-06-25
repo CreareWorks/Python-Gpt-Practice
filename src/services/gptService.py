@@ -1,4 +1,3 @@
-import openai
 from api.gptClient import gptClient
 from config.config import GPT_FIRST_COMPLETE
 
@@ -8,11 +7,11 @@ class gptService:
         self.gpt_client.setOpenAiKey(OPEN_AI_API_KEY)  # OpenAiのAPI_KEYをセット
     
     # 音声ファイルをwhisperAPIに投入
-    def transcribe_speech(self, audio):
+    def transcribe_speech(self, audio: bytes) -> str:
         return self.gpt_client.getWhisperData(audio)
     
     # プロンプトをchatGPTにRequest
-    def generate_minutes(self, transcript):
+    def generate_minutes(self, transcript: str) -> str:
         system_template = """会議の文字起こし文字列を渡します。
 
         この会議のサマリーをMarkdown形式で作成してください。サマリーは、下記形式で書いてください。

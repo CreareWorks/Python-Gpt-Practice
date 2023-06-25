@@ -8,20 +8,21 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # インスタンス生成
-audio_service = audioService()
-api_response_servise = apiResponseServide()
+audio_service: audioService = audioService()
+api_response_servise: apiResponseServide = apiResponseServide()
 
-class request(BaseModel):
+class Request(BaseModel):
     chunk_files: list
     file_path: str
     audio_file_path: str
 
-router = APIRouter()
+router: APIRouter = APIRouter()
+
 @router.post("/audio/save", tags=["audio"])
-async def save_audio(file: UploadFile = File(...)):
+async def save_audio(file: UploadFile = File(...)) -> dict:
     try:
         # 動画保存→音声ファイルへ変換、分割
-        result = await audio_service.save_audio(file)
+        result: dict = await audio_service.save_audio(file)
 
         return api_response_servise.success_response(result)
 
@@ -32,10 +33,10 @@ async def save_audio(file: UploadFile = File(...)):
         )
 
 @router.post("/audio/transacription", tags=["audio"])
-async def transacription_audio(request: request):
+async def transacription_audio(request: Request) -> dict:
     try:
         # 文字起こし
-        result = await audio_service.transacription_audio(
+        result: str = await audio_service.transacription_audio(
             request.chunk_files,
             request.file_path,
             request.audio_file_path

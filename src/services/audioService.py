@@ -1,37 +1,38 @@
-import os, aiofiles, httpx, uuid
-from fastapi import UploadFile, File, Form
+import os,aiofiles,httpx,uuid
+from fastapi import UploadFile,Form
 from pydub import AudioSegment
 from pathlib import Path
+from typing import List
 
 class audioService:
     def __init__(self) -> None:
         pass
         
-    async def save_audio(self, file: UploadFile = Form(...)):
+    async def save_audio(self, file: UploadFile = Form(...)) -> dict:
         # ユニーク識別させる為、uuid生成
-        new_uuid = uuid.uuid4()
+        new_uuid: uuid.UUID = uuid.uuid4()
         
         # 動画ファイルを一時的な保存先に保存
-        file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../../temp", str(new_uuid) + file.filename)
+        file_path: str = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../../temp", str(new_uuid) + file.filename)
         with open(file_path, "wb") as f:
             f.write(await file.read())
 
         # 音声ファイルに変換
-        audio_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../../temp", os.path.splitext(file.filename)[0] + str(new_uuid) + ".wav")
+        audio_file: str = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../../temp", os.path.splitext(file.filename)[0] + str(new_uuid) + ".wav")
         AudioSegment.from_file(file_path).export(audio_file, format="wav")
         
         # 音声ファイルの分割
-        chunk_duration = 60
-        audio = AudioSegment.from_file(audio_file)
-        total_duration = len(audio)
-        chunk_files = []
-        start_time = 0
-        end_time = chunk_duration * 1000
+        chunk_duration: int = 60
+        audio: AudioSegment = AudioSegment.from_file(audio_file)
+        total_duration: int = len(audio)
+        chunk_files: List[str] = []
+        start_time: int = 0
+        end_time: int = chunk_duration * 1000
         while start_time < total_duration:
             if end_time > total_duration:
                 end_time = total_duration
-            chunk = audio[start_time:end_time]
-            chunk_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../../temp", f"output{start_time//1000:03d}" + str(new_uuid) + ".wav")
+            chunk: AudioSegment = audio[start_time:end_time]
+            chunk_file: str = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../../temp", f"output{start_time//1000:03d}" + str(new_uuid) + ".wav")
             chunk.export(chunk_file, format="wav")
             chunk_files.append(chunk_file)
             start_time = end_time
@@ -43,11 +44,11 @@ class audioService:
             "audio_file_path" : audio_file
         }
 
-    async def transacription_audio(self, chunk_files, file_path, audio_file_path):
+    async def transacription_audio(self, chunk_files: List[str], file_path: str, audio_file_path: str) -> str:
         # 分割音声ファイルから文字起こし内容を統合(Post)
-        url = "http://127.0.0.1:8000/gpt/merge"
-        headers = {"Content-Type": "audio/wav"}
-        concat_text = ""
+        url: str = "http://127.0.0.1:8000/gpt/merge"
+        headers: dict = {"Content-Type": "audio/wav"}
+        concat_text: str = ""
         async with httpx.AsyncClient(timeout=60) as client:
             for chunk_file in chunk_files:
                 async with aiofiles.open(chunk_file, "rb") as audio_data:
