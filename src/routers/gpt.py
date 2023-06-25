@@ -18,6 +18,7 @@ async def merge_chunk_file_text(request: Request):
     # 文字起こしと議事録生成
     return gpt_service.transcribe_speech(audio_data)
 
+# 一旦使わない
 @router.post("/gpt/transacription")
 async def create_transacription(request: Request):
     try:
@@ -36,8 +37,12 @@ async def create_transacription(request: Request):
             detail=str(e)
         )
         
+    # 呼び出しサンプル
+    # 統合した文字列をプロンプト共にchatGPTにRequest
+    # url = "http://127.0.0.1:8000/gpt/transacription"
+    # headers = {"Content-Type": "text/plain"}
+    # async with httpx.AsyncClient() as client:
+    #     result = await client.post(url, headers=headers, data=concat_text) #ここに結合した文字列を投げる
 
 
 
-# 残タスク　音声録音？　必要？
-# <aiofiles.threadpool.binary.AsyncBufferedReader object at 0x103b6a220> wrapping <_io.BufferedReader name='/Users/oshimayota/Documents/project_source/transcription-proto/src/services/../../temp/output000.wav'>

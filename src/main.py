@@ -7,9 +7,12 @@ from routers import audio
 
 # create アプリケーション本体のinstanceを生成
 app = FastAPI(
-    multipart=True,
-    max_request_size=100 * 1024 * 1024
+    debug=True, #検証中
+    multipart=True
     )
+
+app.max_request_size = 50 * 1024 * 1024
+
 # cors対策
 app.add_middleware(
     CORSMiddleware,
@@ -23,7 +26,6 @@ app.add_middleware(
 async def handler(request:Request, exc:RequestValidationError):
     print(exc)
     return JSONResponse(content={}, status_code=status.HTTP_422_UNPROCESSABLE_ENTITY)
-
 
 # 各Routerを呼び出す為の定義
 router = APIRouter()
