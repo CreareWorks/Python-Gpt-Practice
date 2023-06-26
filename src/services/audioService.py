@@ -18,8 +18,9 @@ class audioService:
             f.write(await file.read())
 
         # 音声ファイルに変換
-        audio_file: str = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../../temp", os.path.splitext(file.filename)[0] + str(new_uuid) + ".wav")
-        AudioSegment.from_file(file_path).export(audio_file, format="wav")
+        # HACK m4aで圧縮したいところ。 wavは重いのでmp3で対応(mp3に圧縮した時の音質低下が気になるところ。)
+        audio_file: str = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../../temp", os.path.splitext(file.filename)[0] + str(new_uuid) + ".mp3")
+        AudioSegment.from_file(file_path).export(audio_file, format="mp3")
         
         # 音声ファイルの分割
         chunk_duration: int = 60
@@ -32,8 +33,8 @@ class audioService:
             if end_time > total_duration:
                 end_time = total_duration
             chunk: AudioSegment = audio[start_time:end_time]
-            chunk_file: str = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../../temp", f"output{start_time//1000:03d}" + str(new_uuid) + ".wav")
-            chunk.export(chunk_file, format="wav")
+            chunk_file: str = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../../temp", f"output{start_time//1000:03d}" + str(new_uuid) + ".mp3")
+            chunk.export(chunk_file, format="mp3")
             chunk_files.append(chunk_file)
             start_time = end_time
             end_time += chunk_duration * 1000
