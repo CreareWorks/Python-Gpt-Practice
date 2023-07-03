@@ -1,7 +1,12 @@
 # Transcription-proto
 
-# サーバ起動
-uvicorn main:app --reload
+# 環境構築
+①git clone https://github.com/CreareWorks/Transcription-proto.git
+②cd {rootディレクトリ}
+③docker-compose up -d
+  (ここで依存関係にあるパッケージをインストールするように設定済)
+④http://localhost:8080/docs にアクセス
+　swaggerUIが表示されれば環境構築完了
 
 # 文字起こし手順
 ①動画ファイルのアップロード
