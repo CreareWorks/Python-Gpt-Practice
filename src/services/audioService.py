@@ -13,13 +13,13 @@ class audioService:
         new_uuid: uuid.UUID = uuid.uuid4()
         
         # 動画ファイルを一時的な保存先に保存
-        file_path: str = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../../temp", str(new_uuid) + file.filename)
+        file_path: str = os.path.join("/src/temp", str(new_uuid) + file.filename)
         with open(file_path, "wb") as f:
             f.write(await file.read())
 
         # 音声ファイルに変換
         # HACK m4aで圧縮したいところ。 wavは重いのでmp3で対応(mp3に圧縮した時の音質低下が気になるところ。)
-        audio_file: str = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../../temp", os.path.splitext(file.filename)[0] + str(new_uuid) + ".mp3")
+        audio_file: str = os.path.join("/src/temp", os.path.splitext(file.filename)[0] + str(new_uuid) + ".mp3")
         AudioSegment.from_file(file_path).export(audio_file, format="mp3")
         
         # 音声ファイルの分割
@@ -33,7 +33,7 @@ class audioService:
             if end_time > total_duration:
                 end_time = total_duration
             chunk: AudioSegment = audio[start_time:end_time]
-            chunk_file: str = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../../temp", f"output{start_time//1000:03d}" + str(new_uuid) + ".mp3")
+            chunk_file: str = os.path.join("/src/temp", f"output{start_time//1000:03d}" + str(new_uuid) + ".mp3")
             chunk.export(chunk_file, format="mp3")
             chunk_files.append(chunk_file)
             start_time = end_time
@@ -47,7 +47,7 @@ class audioService:
 
     async def transacription_audio(self, chunk_files: List[str], file_path: str, audio_file_path: str) -> str:
         # 分割音声ファイルから文字起こし内容を統合(Post)
-        url: str = "http://127.0.0.1:8000/gpt/merge"
+        url: str = "http://localhost:8080/gpt/merge"
         headers: dict = {"Content-Type": "audio/wav"}
         concat_text: str = ""
         async with httpx.AsyncClient(timeout=60) as client:

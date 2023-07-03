@@ -4,8 +4,6 @@ from services.audioService import audioService
 from services.baseResponseServise import apiResponseServide
 from config.config import BASE_API_RESPONSE
 from pydantic import BaseModel
-from dotenv import load_dotenv
-load_dotenv()
 
 # インスタンス生成
 audio_service: audioService = audioService()

@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+starlette
+aiofiles
+httpx
+ffprobe
+pydub
+openai
+pydantic
+python-dotenv
+python-multipart

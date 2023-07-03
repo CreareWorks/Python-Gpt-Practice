@@ -4,6 +4,12 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from routers import gpt
 from routers import audio
+import sys
+from dotenv import load_dotenv
+load_dotenv('/app/.env')
+
+# キャッシュを作らせない
+sys.dont_write_bytecode = True
 
 # create アプリケーション本体のinstanceを生成
 app = FastAPI(

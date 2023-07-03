@@ -2,17 +2,14 @@ import os, io
 from fastapi import APIRouter, HTTPException, Request
 from services.gptService import gptService
 from config.config import BASE_API_RESPONSE
-from dotenv import load_dotenv
-load_dotenv()
-
-
-# インスタンス生成
-gpt_service = gptService(os.getenv("OPEN_AI_API_KEY"))
 
 router = APIRouter()
 
 @router.post("/gpt/merge")
 async def merge_chunk_file_text(request: Request):
+    # インスタンス生成
+    gpt_service = gptService(os.getenv("OPEN_AI_API_KEY"))
+    
     audio_data = await request.body()
     # 文字起こし
     return gpt_service.transcribe_speech(audio_data)
