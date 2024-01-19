@@ -1,4 +1,12 @@
-# Transcription-proto
+# はじめに
+dockerでpython(FastAPI)の環境構築の練習。
+動画ファイルをアップロードして
+動画情報を音声ファイルへ変換
+  →音声データからWhisper-APIを使って文字起こし
+  →文字起こしした内容をGPTへRequestし
+要約して返却するAPIを作成しました。
+(Pythonを触った事ない状態でチュートリアルだけ実践してから実装したものなのでご容赦ください。)
+
 
 # 環境構築
 ①git clone https://github.com/CreareWorks/Transcription-proto.git
